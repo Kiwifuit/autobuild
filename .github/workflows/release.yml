@@ -61,11 +61,13 @@ jobs:
       - name: "[2/2] Collect bins"
         run: cp target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/${{ matrix.platform.releaseName }}
 
+      - name: Poke
+        run: ls -l dist
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           path: dist/
-          name: bins
 
   release:
     needs: ffi
