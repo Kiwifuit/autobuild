@@ -33,9 +33,9 @@ jobs:
             releaseName: hello-world.i686
 
           - uname: ARM64 Linux
-            target: aarch64-unknown-linux-gnu
+            target: armv7-unknown-linux-gnueabihf
             binName: hello-world
-            releaseName: hello-world.aarch64
+            releaseName: hello-world.armv7
 
     steps:
       - name: Checkout Code
