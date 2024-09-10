@@ -86,5 +86,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            dist/hello-world*
+            dist/*/*
           generate_release_notes: true
