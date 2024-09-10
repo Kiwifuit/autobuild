@@ -78,7 +78,7 @@ jobs:
           path: artifacts/
 
       - run: ls -R
-      - run: mv artifacts/*/* dist/
+      - run: for f in artifacts/*/*; do fp=$(dirname $f); fn=$(basename "$fp"); mv "$f" "dist/$fn"; done
       - run: file dist/*
 
       - name: Create release
