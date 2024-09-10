@@ -75,16 +75,13 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: dist/
+          path: artifacts/
 
-      - run: file dist/*
-      - run: mv dist/*/* dist/
+      - run: mv artifacts/*/* dist/
       - run: file dist/*
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
             dist/*
