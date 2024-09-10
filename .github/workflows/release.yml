@@ -85,7 +85,16 @@ jobs:
           path: artifacts/
 
       - name: Collect Build Artifacts
-        run: for f in artifacts/*/*; do fp=$(dirname $f); fn=$(basename "$fp"); mv "$f" "dist/$fn"; done
+        run: |
+          for f in artifacts/*/*; do
+            fp=$(dirname $f);
+            fn=$(basename "$fp");
+            mv "$f" "dist/$fn";
+          done
+
+          cd dist
+          sha256sum * > sums-all.sha256
+          cd ..
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
