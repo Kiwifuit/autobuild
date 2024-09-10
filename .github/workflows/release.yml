@@ -77,8 +77,9 @@ jobs:
         with:
           path: dist/
 
-      - name: Poke
-        run: ls -1 dist/
+      - run: file dist/*
+      - run: mv dist/*/* dist/
+      - run: file dist/*
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
@@ -86,5 +87,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            dist/*/*
+            dist/*
           generate_release_notes: true
