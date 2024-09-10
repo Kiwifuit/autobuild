@@ -55,20 +55,11 @@ jobs:
           args: --release --target=${{ matrix.platform.target }}
           use-cross: true
 
-      - name: "[1/2] Make bin dir"
-        run: mkdir dist
-
-      - name: "[2/2] Collect bins"
-        run: cp target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/${{ matrix.platform.releaseName }}
-
-      - name: Poke
-        run: ls -l dist
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist/
-          name: bin-${{ matrix.platform.target }}
+          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }}
+          name: ${{ matrix.platform.releaseName }}
 
   release:
     needs: ffi
@@ -78,8 +69,13 @@ jobs:
       contents: write
 
     steps:
+      - name: Prepare artifact dir
+        run: mkdir dist
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: dist/
 
       - name: Create release
         uses: softprops/action-gh-release@v2
