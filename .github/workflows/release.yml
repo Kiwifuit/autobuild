@@ -15,27 +15,27 @@ jobs:
           - uname: x86-64 Windows
             target: x86_64-pc-windows-gnu
             binName: hello-world.exe
-            artifactName: hello-world-x86_64-windows.zip
+            artifactName: hello-world-windows-amd64.zip
 
           - uname: x86 Windows
             target: i686-pc-windows-gnu
             binName: hello-world.exe
-            artifactName: hello-world-i686-windows.zip
+            artifactName: hello-world-windows-x86.zip
 
           - uname: x86-64 Linux
             target: x86_64-unknown-linux-gnu
             binName: hello-world
-            artifactName: hello-world-x86_64-linux.zip
+            artifactName: hello-world-linux-amd64.zip
 
           - uname: x86 Linux
             target: i686-unknown-linux-gnu
             binName: hello-world
-            artifactName: hello-world-i686-linux.zip
+            artifactName: hello-world-linux-x86.zip
 
           - uname: ARM64 Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
-            artifactName: hello-world-armv7-linux.zip
+            artifactName: hello-world-linux-armv7.zip
 
     steps:
       - name: Checkout Code
@@ -60,7 +60,7 @@ jobs:
           mkdir dist
           mv target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/
           cd dist && sha256sum * > sums.sha256 && cd ..
-          zip -9r dist dist
+          zip -9rj dist dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
