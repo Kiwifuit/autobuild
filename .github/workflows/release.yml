@@ -15,27 +15,27 @@ jobs:
           - uname: x86-64 Windows
             target: x86_64-pc-windows-gnu
             binName: hello-world.exe
-            releaseName: hello-world-x86_64.exe
+            artifactName: hello-world-x86_64-windows.zip
 
           - uname: x86 Windows
             target: i686-pc-windows-gnu
             binName: hello-world.exe
-            releaseName: hello-world-i686.exe
+            artifactName: hello-world-i686-windows.zip
 
           - uname: x86-64 Linux
             target: x86_64-unknown-linux-gnu
             binName: hello-world
-            releaseName: hello-world.x86_64
+            artifactName: hello-world-x86_64-linux.zip
 
           - uname: x86 Linux
             target: i686-unknown-linux-gnu
             binName: hello-world
-            releaseName: hello-world.i686
+            artifactName: hello-world-i686-linux.zip
 
           - uname: ARM64 Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
-            releaseName: hello-world.armv7
+            artifactName: hello-world-armv7-linux.zip
 
     steps:
       - name: Checkout Code
@@ -55,11 +55,18 @@ jobs:
           args: --release --target=${{ matrix.platform.target }}
           use-cross: true
 
+      - name: Package build artifact
+        run: |
+          mkdir dist
+          mv target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/
+          cd dist && sha256sum * > sums.sha256 && cd ..
+          zip -9r dist dist
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }}
-          name: ${{ matrix.platform.releaseName }}
+          path: dist.zip
+          name: ${{ matrix.platform.artifactName }}
 
   release:
     needs: ffi
@@ -77,9 +84,8 @@ jobs:
         with:
           path: artifacts/
 
-      - run: ls -R
-      - run: for f in artifacts/*/*; do fp=$(dirname $f); fn=$(basename "$fp"); mv "$f" "dist/$fn"; done
-      - run: file dist/*
+      - name: Collect Build Artifacts
+        run: for f in artifacts/*/*; do fp=$(dirname $f); fn=$(basename "$fp"); mv "$f" "dist/$fn"; done
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
