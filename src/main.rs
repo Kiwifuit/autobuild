@@ -1,13 +1,8 @@
-use std::thread::sleep;
-use std::time::Duration;
-
 fn main() {
+    println!("{} v{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
     println!("Hello, world!");
 
-    let mut counter: u32 = 0;
-    loop {
-        counter += 1;
-        println!("I have been alive for {}s", counter);
-        sleep(Duration::from_secs(1));
-    }
+    println!("You can close this program by pressing CTRL + C");
+    #[allow(clippy::empty_loop)]
+    loop {}
 }
