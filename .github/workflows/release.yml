@@ -6,9 +6,6 @@ on:
 
 jobs:
   build:
-    name: Build backend bin
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         platform:
@@ -37,6 +34,9 @@ jobs:
             binName: hello-world
             artifactName: hello-world.armv7
 
+    name: Build backend bin
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist/#{{matrix.platform.binName}}
+          path: dist/${{matrix.platform.binName}}
           name: ${{ matrix.platform.artifactName }}
 
   release:
@@ -95,7 +95,7 @@ jobs:
           cd ..
 
       - name: Generate Changelog
-        uses: janheinrichmerker/action-github-changelog-generator@latest
+        uses: janheinrichmerker/action-github-changelog-generator@v2.3
         with:
           output: CHANGELOG.md
 
