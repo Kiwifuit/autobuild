@@ -5,7 +5,7 @@ on:
     tags: "v*.*.*"
 
 jobs:
-  ffi:
+  build:
     name: Build backend bin
     runs-on: ubuntu-latest
 
@@ -15,27 +15,27 @@ jobs:
           - uname: x86-64 Windows
             target: x86_64-pc-windows-gnu
             binName: hello-world.exe
-            artifactName: hello-world-windows-amd64.zip
+            artifactName: hello-world-amd64.exe
 
           - uname: x86 Windows
             target: i686-pc-windows-gnu
             binName: hello-world.exe
-            artifactName: hello-world-windows-x86.zip
+            artifactName: hello-world-i686.exe
 
           - uname: x86-64 Linux
             target: x86_64-unknown-linux-gnu
             binName: hello-world
-            artifactName: hello-world-linux-amd64.zip
+            artifactName: hello-world.x86_64
 
           - uname: x86 Linux
             target: i686-unknown-linux-gnu
             binName: hello-world
-            artifactName: hello-world-linux-x86.zip
+            artifactName: hello-world.x86
 
           - uname: ARM64 Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
-            artifactName: hello-world-linux-armv7.zip
+            artifactName: hello-world.armv7
 
     steps:
       - name: Checkout Code
@@ -59,17 +59,15 @@ jobs:
         run: |
           mkdir dist
           mv target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/
-          cd dist && sha256sum * > sums.sha256 && cd ..
-          zip -9rj dist dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist.zip
+          path: dist/#{{matrix.platform.binName}}
           name: ${{ matrix.platform.artifactName }}
 
   release:
-    needs: ffi
+    needs: build
     name: Release all project binaries
     runs-on: ubuntu-latest
     permissions:
@@ -96,9 +94,15 @@ jobs:
           sha256sum * > sums-all.sha256
           cd ..
 
+      - name: Generate Changelog
+        uses: janheinrichmerker/action-github-changelog-generator@latest
+        with:
+          output: CHANGELOG.md
+
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
         with:
+          body: CHANGELOG.md
           files: |
             dist/*
           generate_release_notes: true
