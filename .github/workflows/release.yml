@@ -2,7 +2,7 @@ name: Build & Release Project
 
 on:
   push:
-    tags: "v*.*.*"
+    tags: ["v*.*.*"]
 
 permissions:
   contents: read
