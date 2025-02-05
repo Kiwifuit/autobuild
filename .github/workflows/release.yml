@@ -105,8 +105,8 @@ jobs:
           sha256sum * > sums-all.sha256
           cd ..
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1.12.0
+      - name: Create Changelog
+        uses: requarks/changelog-action@v1
         id: changelog
         with:
           token: ${{ github.token }}
