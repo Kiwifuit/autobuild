@@ -78,15 +78,14 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
 
-      - name: Get previous tag
-        run: |
-          name=$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | tail -2 | head -1)
-          echo "Previous Tag: $name"
-          echo "previous_tag=$name" >> $GITHUB_ENV
-
+      # - name: Get previous tag
+      #   run: |
+      #     name=$(git --no-pager tag --sort=creatordate | tail -2 | head -1)
+      #     echo "Previous Tag: $name"
+      #     echo "previous_tag=$name" >> $GITHUB_ENV
 
       - name: Prepare artifact dir
         run: mkdir dist
@@ -113,10 +112,12 @@ jobs:
         id: changelog
         with:
           token: ${{ github.token }}
-          fromTag: ${{ env.previous_tag }}
-          toTag: ${{ github.ref_name }}
+          # fromTag: ${{ env.previous_tag }}
+          # toTag: ${{ github.ref_name }}
+          tag: ${{ github.ref_name }}
           writeToFile: false
           reverseOrder: true
+          # excludeTypes: docs,chore
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
