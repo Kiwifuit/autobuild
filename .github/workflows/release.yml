@@ -78,6 +78,16 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get previous tag
+        run: |
+          name=$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | tail -2 | head -1)
+          echo "Previous Tag: $name"
+          echo "previous_tag=$name" >> $GITHUB_ENV
+
+
       - name: Prepare artifact dir
         run: mkdir dist
 
@@ -85,13 +95,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
-
-      - name: Get previous tag
-        id: tagging
-        run: |
-          name=$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | tail -2 | head -1)
-          echo "Previous Tag: $name"
-          echo "previous_tag=$name" >> $GITHUB_ENV
 
       - name: Collect Build Artifacts
         run: |
