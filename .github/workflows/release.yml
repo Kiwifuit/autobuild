@@ -98,16 +98,19 @@ jobs:
           sha256sum * > sums-all.sha256
           cd ..
 
-      - name: Changelog generator
-        uses: dittrichlucas/changelog-generator@main
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        id: changelog
         with:
           token: ${{ github.token }}
-          repo: ${{ github.repository }}
+          tag: ${{ github.ref_name }}
+          writeToFile: false
+          reverseOrder: true
 
       - name: Create release
         uses: softprops/action-gh-release@v2.0.8
         with:
-          body_path: CHANGELOG.md
+          body: ${{ steps.changelog.output.changes }}
           files: |
             dist/*
           generate_release_notes: true
