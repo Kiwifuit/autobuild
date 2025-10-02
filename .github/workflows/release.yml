@@ -96,7 +96,7 @@ jobs:
 
   deb:
     needs: build
-    name: Pushes debian packages to repository
+    name: Push debian packages to repository
     runs-on: ubuntu-latest
 
     steps:
