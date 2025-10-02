@@ -14,26 +14,31 @@ jobs:
       matrix:
         platform:
           - uname: x86-64 Windows
+            os: Windows
             target: x86_64-pc-windows-gnu
             binName: hello-world.exe
             artifactName: hello-world-amd64.exe
 
           - uname: x86 Windows
+            os: Windows
             target: i686-pc-windows-gnu
             binName: hello-world.exe
             artifactName: hello-world-i686.exe
 
           - uname: x86-64 Linux
+            os: Linux
             target: x86_64-unknown-linux-gnu
             binName: hello-world
             artifactName: hello-world.x86_64
 
           - uname: x86 Linux
+            os: Linux
             target: i686-unknown-linux-gnu
             binName: hello-world
             artifactName: hello-world.x86
 
           - uname: ARM64 Linux
+            os: Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
             artifactName: hello-world.armv7
@@ -52,6 +57,12 @@ jobs:
           target: ${{ matrix.platform.target }}
           override: true
 
+      - name: Install cargo-deb
+        if: ${{ matrix.platform.os }} == 'Linux'
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deb
+
       - name: Build for ${{ matrix.platform.uname }}
         uses: actions-rs/cargo@v1
         with:
@@ -59,16 +70,47 @@ jobs:
           args: --release --target=${{ matrix.platform.target }}
           use-cross: true
 
-      - name: Package build artifact
+      - name: Package Debian build artifact
+        if: ${{ matrix.platform.os }} == 'Linux'
         run: |
-          mkdir dist
-          mv target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/
+          mkdir -p dist/deb
+          cargo deb --target=${{ matrix.platform.target }}
+          mv target/${{ matrix.platform.target }}/debian/*.deb dist/deb
 
-      - name: Upload artifacts
+      - name: Package raw build artifact
+        run: |
+          mkdir -p dist/bin
+          mv target/${{ matrix.platform.target }}/release/${{ matrix.platform.binName }} dist/bin/
+
+      - name: Upload binary artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist/${{matrix.platform.binName}}
-          name: ${{ matrix.platform.artifactName }}
+          path: dist/bin/${{matrix.platform.binName}}
+          name: ${{ matrix.platform.artifactName }}-bin
+
+      - name: Upload Debian artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: dist/deb/*.deb
+          name: ${{ matrix.platform.binName }}-${{ matrix.platform.target }}-deb
+
+  deb:
+    needs: build
+    name: Pushes debian packages to repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare release directory
+        run: mkdir dist
+
+      - name: Download debian artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          pattern: "*-deb"
+
+      - run: ls -la
+
 
   release:
     needs: build
@@ -94,6 +136,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
+          pattern: "*-bin"
 
       - name: Collect Build Artifacts
         run: |
