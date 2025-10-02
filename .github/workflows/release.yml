@@ -46,7 +46,7 @@ jobs:
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
             artifactName: hello-world.armv7
-            additionalPackages: 'gcc-multilib gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libc6-dev-armhf-cross'
+            additionalPackages: 'gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libc6-dev-armhf-cross'
 
     name: Build backend bin
     runs-on: ubuntu-latest
