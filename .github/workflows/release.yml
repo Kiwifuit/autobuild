@@ -18,12 +18,16 @@ jobs:
           #   target: x86_64-pc-windows-gnu
           #   binName: hello-world.exe
           #   artifactName: hello-world-amd64.exe
+          #   useCross: true
+          #   additionalPackages: ''
 
           # - uname: x86 Windows
           #   os: Windows
           #   target: i686-pc-windows-gnu
           #   binName: hello-world.exe
           #   artifactName: hello-world-i686.exe
+          #   useCross: true
+          #   additionalPackages: ''
 
           - uname: x86-64 Linux
             os: Linux
@@ -31,6 +35,7 @@ jobs:
             binName: hello-world
             artifactName: hello-world.x86_64
             useCross: false
+            additionalPackages: ''
 
           - uname: x86 Linux
             os: Linux
@@ -38,13 +43,15 @@ jobs:
             binName: hello-world
             artifactName: hello-world.x86
             useCross: false
+            additionalPackages: ''
 
           - uname: ARM64 Linux
             os: Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
             artifactName: hello-world.armv7
-            useCross: false
+            useCross: true
+            additionalPackages: 'gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf'
 
     name: Build backend bin
     runs-on: ubuntu-latest
@@ -65,6 +72,12 @@ jobs:
         uses: taiki-e/install-action@v2
         with:
           tool: cargo-deb
+
+      - name: Install additional packages
+        if: ${{ matrix.platform.additionalPackages }} != ''
+        run: |
+          sudo apt-get update
+          sudo apt-get install ${{ matrix.platform.additionalPackages }}
 
       - name: Build for ${{ matrix.platform.uname }}
         uses: actions-rs/cargo@v1
