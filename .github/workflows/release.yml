@@ -41,12 +41,12 @@ jobs:
             artifactName: hello-world.x86
             additionalPackages: 'gcc-multilib libc6-dev-i386'
 
-          - uname: ARM64 Linux
-            os: Linux
-            target: armv7-unknown-linux-gnueabihf
-            binName: hello-world
-            artifactName: hello-world.armv7
-            additionalPackages: 'gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf'
+          # - uname: ARM64 Linux
+          #   os: Linux
+          #   target: armv7-unknown-linux-gnueabihf
+          #   binName: hello-world
+          #   artifactName: hello-world.armv7
+          #   additionalPackages: 'gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf'
 
     name: Build backend bin
     runs-on: ubuntu-latest
