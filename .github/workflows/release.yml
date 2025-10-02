@@ -39,7 +39,7 @@ jobs:
             target: i686-unknown-linux-gnu
             binName: hello-world
             artifactName: hello-world.x86
-            additionalPackages: 'gcc-multilib gcc-i686-linux-gnu g++-i686-linux-gnu libc6-dev-i386'
+            additionalPackages: 'gcc-multilib libc6-dev-i386'
 
           - uname: ARM64 Linux
             os: Linux
