@@ -13,17 +13,17 @@ jobs:
     strategy:
       matrix:
         platform:
-          - uname: x86-64 Windows
-            os: Windows
-            target: x86_64-pc-windows-gnu
-            binName: hello-world.exe
-            artifactName: hello-world-amd64.exe
+          # - uname: x86-64 Windows
+          #   os: Windows
+          #   target: x86_64-pc-windows-gnu
+          #   binName: hello-world.exe
+          #   artifactName: hello-world-amd64.exe
 
-          - uname: x86 Windows
-            os: Windows
-            target: i686-pc-windows-gnu
-            binName: hello-world.exe
-            artifactName: hello-world-i686.exe
+          # - uname: x86 Windows
+          #   os: Windows
+          #   target: i686-pc-windows-gnu
+          #   binName: hello-world.exe
+          #   artifactName: hello-world-i686.exe
 
           - uname: x86-64 Linux
             os: Linux
