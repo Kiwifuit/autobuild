@@ -43,14 +43,14 @@ jobs:
             binName: hello-world
             artifactName: hello-world.x86
             useCross: false
-            additionalPackages: ''
+            additionalPackages: 'gcc-i686-linux-gnu g++-i686-linux-gnu'
 
           - uname: ARM64 Linux
             os: Linux
             target: armv7-unknown-linux-gnueabihf
             binName: hello-world
             artifactName: hello-world.armv7
-            useCross: true
+            useCross: false
             additionalPackages: 'gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf'
 
     name: Build backend bin
