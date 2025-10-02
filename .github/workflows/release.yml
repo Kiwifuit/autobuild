@@ -119,7 +119,7 @@ jobs:
           path: artifacts/
           pattern: "*-deb"
 
-      - run: ls -la
+      - run: ls -laR
 
 
   release:
