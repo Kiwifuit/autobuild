@@ -126,13 +126,13 @@ jobs:
         uses: cloudsmith-io/action@master
         with:
           api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-          format: deb
-          owner: inhumane
-          repo: hello-world
-          distro: debian
-          release: trixie
+          format: "deb"
+          owner: "inhumane"
+          repo: "hello-world"
+          distro: "debian"
+          release: "trixie"
           republish: "true"
-          file: dist/*.deb
+          file: "dist/*.deb"
 
 
   release:
